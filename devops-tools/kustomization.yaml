@@ -1,0 +1,5 @@
+resources:
+- serviceAccount.yaml
+- deployment.yaml
+- volume.yaml
+- service.yaml

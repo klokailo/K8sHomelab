@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-app
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: spring-boot-app
+  template:
+    metadata:
+      labels:
+        app: spring-boot-app
+    spec:
+      containers:
+      - name: spring-boot-container
+        image: docker.local/k8s-demo-spring-boot-sample-service:latest
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always #IfNotPresent
+      imagePullSecrets:
+      - name: docker-registry-credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-app-service
+spec:
+  type: ClusterIP
+  selector:
+    app: spring-boot-app
+  ports:
+    - port: 8080
+      targetPort: 8080
